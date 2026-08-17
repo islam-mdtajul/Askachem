@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Askachem GmbH — international trading in raw materials, energy products and industrial commodities.">
+  <title>Askachem GmbH — Raw Materials Trading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:#14181C;
+      --ink-soft:#1F262C;
+      --paper:#F5F3ED;
+      --paper-dim:#EAE6DB;
+      --steel:#8A94A0;
+      --line:#D8D3C7;
+      --line-dark:#2C343B;
+      --signal:#2F6F62;
+      --signal-bright:#3E8C7C;
+      --max:1240px;
+    }
+
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0;
+      color:var(--ink);
+      background:var(--paper);
+      font-family:"IBM Plex Sans", sans-serif;
+      line-height:1.55;
+    }
+    body.modal-open { overflow:hidden; }
+    button, input, textarea { font:inherit; }
+    a { color:inherit; }
+    :focus-visible { outline:2px solid var(--signal-bright); outline-offset:3px; }
+
+    .wrap { width:min(calc(100% - 48px), var(--max)); margin-inline:auto; }
+    .mono { font-family:"IBM Plex Mono", monospace; }
+    .eyebrow {
+      margin:0 0 18px;
+      font:500 12px/1.3 "IBM Plex Mono", monospace;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .eyebrow--light { color:#B6C0C8; }
+    .section { padding:112px 0; }
+    .section__head {
+      display:grid;
+      grid-template-columns:1fr 1.1fr;
+      gap:72px;
+      align-items:end;
+      margin-bottom:64px;
+    }
+    .section__title {
+      margin:0;
+      max-width:800px;
+      font:500 clamp(38px, 5vw, 72px)/.98 "Fraunces", serif;
+      letter-spacing:-.035em;
+    }
+    .section__title em { font-weight:400; }
+    .section__lead { max-width:620px; margin:0; font-size:17px; color:#444C52; }
+
+    .nav {
+      position:fixed;
+      inset:0 0 auto;
+      z-index:50;
+      border-bottom:1px solid rgba(216,211,199,.65);
+      background:rgba(245,243,237,.93);
+      backdrop-filter:blur(16px);
+    }
+    .nav__inner {
+      min-height:72px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:28px;
+    }
+    .brand {
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font:600 17px/1 "IBM Plex Sans", sans-serif;
+      letter-spacing:.02em;
+    }
+    .brand__mark {
+      width:30px;
+      height:30px;
+      border:1px solid var(--ink);
+      display:grid;
+      place-items:center;
+      font:500 10px/1 "IBM Plex Mono", monospace;
+    }
+    .nav__links { display:flex; gap:30px; align-items:center; }
+    .nav__link {
+      text-decoration:none;
+      font:500 12px/1 "IBM Plex Mono", monospace;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .nav__cta {
+      padding:11px 14px;
+      border:1px solid var(--ink);
+      background:transparent;
+      cursor:pointer;
+      font:500 11px/1 "IBM Plex Mono", monospace;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .nav__toggle { display:none; border:0; background:none; padding:10px; cursor:pointer; }
+
+    .hero {
+      min-height:100vh;
+      padding:160px 0 84px;
+      background:var(--ink);
+      color:var(--paper);
+      display:flex;
+      align-items:center;
+      overflow:hidden;
+    }
+    .hero__grid {
+      width:100%;
+      display:grid;
+      grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr);
+      gap:82px;
+      align-items:center;
+    }
+    .hero__title {
+      margin:0;
+      font:500 clamp(56px,7.2vw,108px)/.88 "Fraunces", serif;
+      letter-spacing:-.055em;
+      max-width:780px;
+    }
+    .hero__title em { color:var(--signal-bright); font-weight:400; }
+    .hero__copy { max-width:620px; margin:32px 0 0; color:#BCC4CA; font-size:18px; }
+    .hero__actions { margin-top:42px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+    .btn {
+      border:1px solid var(--paper);
+      background:var(--paper);
+      color:var(--ink);
+      padding:15px 18px;
+      cursor:pointer;
+      text-decoration:none;
+      font:500 11px/1 "IBM Plex Mono", monospace;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+    }
+    .btn--ghost { background:transparent; color:var(--paper); }
+
+    .manifest {
+      border:1px solid var(--line-dark);
+      position:relative;
+      background:linear-gradient(180deg, rgba(255,255,255,.018), transparent);
+    }
+    .manifest::before {
+      content:"TRADE MANIFEST / BERLIN";
+      position:absolute;
+      top:-11px;
+      left:22px;
+      padding:0 10px;
+      background:var(--ink);
+      color:#7F8A93;
+      font:500 10px/20px "IBM Plex Mono", monospace;
+      letter-spacing:.12em;
+    }
+    .manifest__head,
+    .manifest__row {
+      display:grid;
+      grid-template-columns:64px 1fr auto;
+      gap:16px;
+      align-items:center;
+      padding:17px 20px;
+      border-bottom:1px solid var(--line-dark);
+      font-family:"IBM Plex Mono", monospace;
+    }
+    .manifest__head { color:#77828B; font-size:10px; letter-spacing:.09em; }
+    .manifest__row { color:#D8DDDF; font-size:12px; transform:translateY(0); opacity:1; }
+    .manifest__row:last-child { border-bottom:0; }
+    .manifest__code { color:var(--signal-bright); }
+    .manifest__status { color:#7F8A93; font-size:10px; }
+    .manifest__footer {
+      padding:20px;
+      border-top:1px dashed var(--line-dark);
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      color:#65727A;
+      font:400 10px/1.5 "IBM Plex Mono", monospace;
+    }
+
+    .about { background:var(--paper); }
+    .about__grid { display:grid; grid-template-columns:1.1fr .9fr; gap:92px; align-items:start; }
+    .about__copy { font-size:21px; max-width:720px; margin:0; }
+    .about__copy + .about__copy { margin-top:26px; color:#52595E; font-size:16px; }
+    .seal {
+      width:min(100%,390px);
+      aspect-ratio:1;
+      border:1px solid var(--ink);
+      display:grid;
+      place-items:center;
+      position:relative;
+      margin-left:auto;
+    }
+    .seal::before,
+    .seal::after { content:""; position:absolute; inset:16px; border:1px solid var(--line); border-radius:50%; }
+    .seal::after { inset:42px; border-style:dashed; }
+    .seal__content { text-align:center; position:relative; z-index:2; }
+    .seal__name { display:block; font:500 36px/1 "Fraunces", serif; }
+    .seal__meta { display:block; margin-top:14px; font:500 10px/1.6 "IBM Plex Mono", monospace; letter-spacing:.09em; text-transform:uppercase; }
+
+    .portfolio { background:var(--paper-dim); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    .commodity-grid { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--ink); border-left:1px solid var(--ink); }
+    .card {
+      min-height:230px;
+      padding:28px;
+      border-right:1px solid var(--ink);
+      border-bottom:1px solid var(--ink);
+      background:transparent;
+      text-align:left;
+      cursor:pointer;
+      position:relative;
+      transition:background .2s ease, color .2s ease;
+    }
+    .card:hover { background:var(--ink); color:var(--paper); }
+    .card__code { color:var(--signal); font:500 11px/1 "IBM Plex Mono", monospace; }
+    .card:hover .card__code { color:var(--signal-bright); }
+    .card__name { margin:54px 0 0; max-width:280px; font:500 28px/1.05 "Fraunces", serif; letter-spacing:-.025em; }
+    .card__arrow { position:absolute; right:26px; bottom:24px; font:400 18px/1 "IBM Plex Mono", monospace; }
+
+    .approach { background:var(--ink); color:var(--paper); }
+    .approach .section__lead { color:#AAB3BA; }
+    .pillars { border-top:1px solid var(--line-dark); }
+    .pillar {
+      display:grid;
+      grid-template-columns:88px 1fr 1fr;
+      gap:32px;
+      padding:42px 0;
+      border-bottom:1px solid var(--line-dark);
+      align-items:start;
+    }
+    .pillar__num { color:var(--signal-bright); font:500 11px/1.5 "IBM Plex Mono", monospace; }
+    .pillar__title { margin:0; font:500 34px/1.05 "Fraunces", serif; }
+    .pillar__copy { margin:0; color:#AAB3BA; max-width:520px; }
+
+    .contact { background:var(--paper); }
+    .contact__grid { display:grid; grid-template-columns:.85fr 1.15fr; gap:92px; }
+    .contact__meta { border-top:1px solid var(--ink); }
+    .contact__row { padding:18px 0; border-bottom:1px solid var(--line); display:grid; grid-template-columns:110px 1fr; gap:20px; }
+    .contact__label { font:500 10px/1.5 "IBM Plex Mono", monospace; letter-spacing:.09em; text-transform:uppercase; color:#676E73; }
+    .contact__form { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+    .field { display:grid; gap:9px; }
+    .field--full { grid-column:1 / -1; }
+    .field__label { font:500 10px/1 "IBM Plex Mono", monospace; letter-spacing:.08em; text-transform:uppercase; }
+    .field__input {
+      width:100%;
+      border:0;
+      border-bottom:1px solid var(--ink);
+      border-radius:0;
+      background:transparent;
+      padding:10px 0 13px;
+      color:var(--ink);
+    }
+    textarea.field__input { min-height:120px; resize:vertical; }
+    .contact__submit { grid-column:1 / -1; justify-self:start; border-color:var(--ink); background:var(--ink); color:var(--paper); }
+
+    .footer { background:var(--ink); color:var(--paper); padding:44px 0; border-top:1px solid var(--line-dark); }
+    .footer__inner { display:grid; grid-template-columns:1fr auto; gap:40px; align-items:end; }
+    .footer__brand { font:500 27px/1 "Fraunces", serif; }
+    .footer__legal { display:flex; gap:22px; align-items:center; flex-wrap:wrap; }
+    .footer__link { color:#AAB3BA; background:none; border:0; padding:0; cursor:pointer; font:400 10px/1 "IBM Plex Mono", monospace; letter-spacing:.08em; text-transform:uppercase; }
+
+    .modal {
+      position:fixed;
+      inset:0;
+      z-index:100;
+      display:none;
+      place-items:center;
+      padding:24px;
+      background:rgba(20,24,28,.82);
+    }
+    .modal[aria-hidden="false"] { display:grid; }
+    .modal__panel {
+      width:min(720px,100%);
+      max-height:min(86vh,780px);
+      overflow:auto;
+      background:var(--paper);
+      color:var(--ink);
+      border:1px solid var(--ink);
+    }
+    .modal__head { display:flex; justify-content:space-between; gap:20px; align-items:center; padding:20px 24px; border-bottom:1px solid var(--ink); }
+    .modal__code { color:var(--signal); font:500 10px/1 "IBM Plex Mono", monospace; letter-spacing:.1em; }
+    .modal__close { border:0; background:none; cursor:pointer; font:500 20px/1 "IBM Plex Mono", monospace; }
+    .modal__body { padding:34px 24px 40px; }
+    .modal__title { margin:0 0 22px; font:500 42px/1 "Fraunces", serif; letter-spacing:-.03em; }
+    .modal__body p { color:#4C5459; }
+    .modal__ledger { margin-top:30px; border-top:1px solid var(--ink); }
+    .modal__ledger-row { padding:13px 0; border-bottom:1px solid var(--line); display:grid; grid-template-columns:150px 1fr; gap:20px; font-size:13px; }
+    .modal__ledger-key { font:500 10px/1.5 "IBM Plex Mono", monospace; text-transform:uppercase; letter-spacing:.08em; color:#697177; }
+
+    .toast {
+      position:fixed;
+      right:24px;
+      bottom:24px;
+      z-index:120;
+      padding:14px 17px;
+      background:var(--ink);
+      color:var(--paper);
+      border:1px solid var(--line-dark);
+      font:400 11px/1.4 "IBM Plex Mono", monospace;
+      opacity:0;
+      transform:translateY(10px);
+      pointer-events:none;
+      transition:.2s ease;
+    }
+    .toast.is-visible { opacity:1; transform:translateY(0); }
+
+    .reveal { opacity:0; transform:translateY(20px); transition:opacity .55s ease, transform .55s ease; }
+    .reveal.is-visible { opacity:1; transform:none; }
+
+    @media (max-width:900px) {
+      .section { padding:88px 0; }
+      .hero__grid,
+      .about__grid,
+      .contact__grid,
+      .section__head { grid-template-columns:1fr; gap:48px; }
+      .hero__grid { grid-template-columns:1fr; }
+      .hero { padding-top:138px; }
+      .seal { margin:0; width:310px; }
+      .commodity-grid { grid-template-columns:repeat(2,1fr); }
+      .pillar { grid-template-columns:64px 1fr; }
+      .pillar__copy { grid-column:2; }
+    }
+
+    @media (max-width:680px) {
+      .wrap { width:min(calc(100% - 28px), var(--max)); }
+      .nav__links {
+        position:absolute;
+        top:72px;
+        left:0;
+        right:0;
+        display:none;
+        flex-direction:column;
+        align-items:stretch;
+        gap:0;
+        background:var(--paper);
+        border-bottom:1px solid var(--ink);
+        padding:12px 14px 18px;
+      }
+      .nav__links.is-open { display:flex; }
+      .nav__link { padding:14px 4px; border-bottom:1px solid var(--line); }
+      .nav__cta { margin-top:10px; }
+      .nav__toggle { display:block; }
+      .hero__title { font-size:clamp(52px,18vw,78px); }
+      .hero__grid { gap:56px; }
+      .manifest__head,
+      .manifest__row { grid-template-columns:48px 1fr; }
+      .manifest__status { display:none; }
+      .section__title { font-size:46px; }
+      .commodity-grid { grid-template-columns:1fr; }
+      .card { min-height:190px; }
+      .pillar { grid-template-columns:1fr; gap:14px; }
+      .pillar__copy { grid-column:auto; }
+      .contact__form { grid-template-columns:1fr; }
+      .field--full,
+      .contact__submit { grid-column:auto; }
+      .footer__inner { grid-template-columns:1fr; }
+      .modal__ledger-row { grid-template-columns:1fr; gap:4px; }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior:auto; }
+      *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+      .reveal { opacity:1; transform:none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" aria-label="Primary navigation">
+    <div class="wrap nav__inner">
+      <a class="brand" href="#top" aria-label="Askachem home">
+        <span class="brand__mark" aria-hidden="true">A/C</span>
+        <span>Askachem GmbH</span>
+      </a>
+      <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle navigation">☰</button>
+      <div class="nav__links" id="navLinks">
+        <a class="nav__link" href="#about">Company</a>
+        <a class="nav__link" href="#portfolio">Portfolio</a>
+        <a class="nav__link" href="#approach">Approach</a>
+        <a class="nav__link" href="#contact">Contact</a>
+        <button class="nav__cta" data-open-modal="quoteModal">Request a quote</button>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero__grid">
+        <div>
+          <p class="eyebrow eyebrow--light">Berlin · International Raw Materials Trading</p>
+          <h1 class="hero__title">Materials that keep <em>industry moving.</em></h1>
+          <p class="hero__copy">Askachem GmbH connects buyers and suppliers across raw materials, industrial products, energy and specialist commodities — with a trading process built around clarity, reliability and commercial discipline.</p>
+          <div class="hero__actions">
+            <a class="btn" href="#portfolio">View trading portfolio</a>
+            <button class="btn btn--ghost" data-open-modal="quoteModal">Start an enquiry</button>
+          </div>
+        </div>
+
+        <div class="manifest" aria-label="Animated trade manifest">
+          <div class="manifest__head"><span>REF</span><span>COMMODITY</span><span>STATUS</span></div>
+          <div id="manifestRows"></div>
+          <div class="manifest__footer">
+            <span>REGISTRY: HRB 186300 B</span>
+            <span>ORIGIN: BERLIN / DE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about" id="about">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <div>
+            <p class="eyebrow">01 / Company</p>
+            <h2 class="section__title">A trading company built around <em>movement and trust.</em></h2>
+          </div>
+          <p class="section__lead">From procurement conversations to shipment coordination, our role is to make complex international trade more direct, traceable and commercially useful.</p>
+        </div>
+
+        <div class="about__grid reveal">
+          <div>
+            <p class="about__copy">Askachem GmbH is a Berlin-registered trading company active across raw materials for pharmaceutical, leather, industrial, food, feed, textile, technical and cosmetic applications, alongside solar, electronic, biogas, petrochemical and water-treatment products.</p>
+            <p class="about__copy">We work across categories, suppliers and markets while keeping the commercial process straightforward: understand the specification, align the source, structure the transaction and support delivery.</p>
+          </div>
+          <div class="seal" aria-label="Company registry seal">
+            <div class="seal__content">
+              <span class="seal__name">Askachem</span>
+              <span class="seal__meta">Gesellschaft mit beschränkter Haftung<br>Berlin · Germany<br>HRB 186300 B</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section portfolio" id="portfolio">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <div>
+            <p class="eyebrow">02 / Trading Portfolio</p>
+            <h2 class="section__title">A broad manifest of <em>commercial materials.</em></h2>
+          </div>
+          <p class="section__lead">Select a category to view the trading scope. Product availability, specifications and origin are handled enquiry by enquiry.</p>
+        </div>
+        <div class="commodity-grid reveal" id="commodityGrid"></div>
+      </div>
+    </section>
+
+    <section class="section approach" id="approach">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <div>
+            <p class="eyebrow eyebrow--light">03 / Approach</p>
+            <h2 class="section__title">Trade works better when the process is <em>legible.</em></h2>
+          </div>
+          <p class="section__lead">We treat each enquiry like a manifest: define what matters, document the route and keep the transaction moving.</p>
+        </div>
+
+        <div class="pillars reveal">
+          <article class="pillar">
+            <span class="pillar__num">A / 01</span>
+            <h3 class="pillar__title">Source with purpose</h3>
+            <p class="pillar__copy">We begin with the commercial and technical requirement, then identify the relevant supplier route rather than forcing a generic catalogue match.</p>
+          </article>
+          <article class="pillar">
+            <span class="pillar__num">A / 02</span>
+            <h3 class="pillar__title">Structure clearly</h3>
+            <p class="pillar__copy">Specifications, quantities, documentation and commercial conditions are aligned early so each party understands the transaction before it moves.</p>
+          </article>
+          <article class="pillar">
+            <span class="pillar__num">A / 03</span>
+            <h3 class="pillar__title">Coordinate through delivery</h3>
+            <p class="pillar__copy">We stay involved through the practical trading steps, maintaining a clear line between the agreed material, the commercial terms and execution.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <div>
+            <p class="eyebrow">04 / Contact</p>
+            <h2 class="section__title">Put the next requirement <em>on the manifest.</em></h2>
+          </div>
+          <p class="section__lead">Share the product, specification, quantity and delivery market. We’ll use that as the starting point for the trading conversation.</p>
+        </div>
+
+        <div class="contact__grid reveal">
+          <div class="contact__meta">
+            <div class="contact__row"><span class="contact__label">Company</span><span>Askachem GmbH</span></div>
+            <div class="contact__row"><span class="contact__label">Registry</span><span>Charlottenburg District Court · HRB 186300 B</span></div>
+            <div class="contact__row"><span class="contact__label">Address</span><span>[Street Address], [Postal Code] Berlin, Germany</span></div>
+            <div class="contact__row"><span class="contact__label">Email</span><span>[Email Address]</span></div>
+            <div class="contact__row"><span class="contact__label">Phone</span><span>[Phone Number]</span></div>
+          </div>
+
+          <form class="contact__form" id="contactForm">
+            <label class="field"><span class="field__label">Name</span><input class="field__input" name="name" autocomplete="name" required></label>
+            <label class="field"><span class="field__label">Company</span><input class="field__input" name="company" autocomplete="organization"></label>
+            <label class="field field--full"><span class="field__label">Email</span><input class="field__input" name="email" type="email" autocomplete="email" required></label>
+            <label class="field field--full"><span class="field__label">Requirement</span><textarea class="field__input" name="message" required placeholder="Product / specification / quantity / destination"></textarea></label>
+            <button class="btn contact__submit" type="submit">Submit enquiry</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <div>
+        <div class="footer__brand">Askachem GmbH</div>
+        <div class="mono" style="margin-top:10px;color:#78838B;font-size:10px;">RAW MATERIALS / ENERGY / INDUSTRIAL TRADE · BERLIN</div>
+      </div>
+      <div class="footer__legal">
+        <button class="footer__link" data-open-modal="impressumModal">Impressum</button>
+        <button class="footer__link" data-open-modal="quoteModal">Request a quote</button>
+        <span class="mono" style="color:#69747C;font-size:10px;">© <span id="year"></span></span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal" id="commodityModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="commodityModalTitle">
+    <div class="modal__panel" role="document">
+      <div class="modal__head"><span class="modal__code" id="commodityModalCode">PORTFOLIO</span><button class="modal__close" type="button" data-close-modal aria-label="Close modal">×</button></div>
+      <div class="modal__body">
+        <h2 class="modal__title" id="commodityModalTitle">Commodity</h2>
+        <p id="commodityModalDescription"></p>
+        <div class="modal__ledger">
+          <div class="modal__ledger-row"><span class="modal__ledger-key">Trade mode</span><span>Enquiry-based sourcing and supply</span></div>
+          <div class="modal__ledger-row"><span class="modal__ledger-key">Specifications</span><span>Confirmed per product and transaction</span></div>
+          <div class="modal__ledger-row"><span class="modal__ledger-key">Origin / destination</span><span>Subject to enquiry and availability</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="quoteModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="quoteModalTitle">
+    <div class="modal__panel" role="document">
+      <div class="modal__head"><span class="modal__code">ENQUIRY / Q-001</span><button class="modal__close" type="button" data-close-modal aria-label="Close modal">×</button></div>
+      <div class="modal__body">
+        <h2 class="modal__title" id="quoteModalTitle">Request a quote</h2>
+        <p>Send us the material, grade/specification, quantity, target destination and any timing requirements.</p>
+        <form class="contact__form" id="quoteForm" style="margin-top:28px;">
+          <label class="field"><span class="field__label">Name</span><input class="field__input" name="name" required></label>
+          <label class="field"><span class="field__label">Company</span><input class="field__input" name="company"></label>
+          <label class="field field--full"><span class="field__label">Email</span><input class="field__input" type="email" name="email" required></label>
+          <label class="field field--full"><span class="field__label">Trade requirement</span><textarea class="field__input" name="message" required></textarea></label>
+          <button class="btn contact__submit" type="submit">Send requirement</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="impressumModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="impressumModalTitle">
+    <div class="modal__panel" role="document">
+      <div class="modal__head"><span class="modal__code">LEGAL / DE</span><button class="modal__close" type="button" data-close-modal aria-label="Close modal">×</button></div>
+      <div class="modal__body">
+        <h2 class="modal__title" id="impressumModalTitle">Impressum</h2>
+        <div class="modal__ledger">
+          <div class="modal__ledger-row"><span class="modal__ledger-key">Company</span><span>Askachem GmbH</span></div>
+          <div class="modal__ledger-row"><span class="modal__ledger-key">Address</span><span>[Street Address], [Postal Code] Berlin, Germany</span></div>
+          <div class="modal__ledger-row"><span class="modal__ledger-key">Register</span><span>Amtsgericht Charlottenburg · HRB 186300 B</span></div>
+          <div class="modal__ledger-row"><span class="modal__ledger-key">Managing Director</span><span>[Managing Director]</span></div>
+          <div class="modal__ledger-row"><span class="modal__ledger-key">Contact</span><span>[Email Address] · [Phone Number]</span></div>
+          <div class="modal__ledger-row"><span class="modal__ledger-key">VAT ID</span><span>[USt-IdNr.]</span></div>
+        </div>
+        <p style="margin-top:28px;"><strong>Business purpose:</strong> Trading in raw materials for pharmaceutical products, leather raw materials, industrial raw materials, food, feed, textiles, technical and cosmetic products. Trading in solar energy and electronic products, production and distribution of biogas and petrochemical products as well as water treatment products.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Enquiry captured in this demo. Backend connection is still pending.</div>
+
+  <script>
+    (function(){
+      'use strict';
+
+      // 1. DATA
+      const DATA = {
+        commodities: [
+          { code:'RM-01', name:'Pharmaceutical Raw Materials', description:'Raw materials and ingredients for pharmaceutical-sector trading enquiries.' },
+          { code:'RM-02', name:'Leather Raw Materials', description:'Trading enquiries across leather-sector raw materials and related inputs.' },
+          { code:'RM-03', name:'Industrial Raw Materials', description:'General industrial raw materials sourced and structured per commercial requirement.' },
+          { code:'RM-04', name:'Food & Feed Materials', description:'Raw materials for food and feed applications, handled against specification and market.' },
+          { code:'RM-05', name:'Textile Raw Materials', description:'Commercial sourcing routes for textile-industry raw materials and inputs.' },
+          { code:'RM-06', name:'Technical Products', description:'Technical materials and products traded on an enquiry-led basis.' },
+          { code:'RM-07', name:'Cosmetic Raw Materials', description:'Raw materials and ingredients for cosmetic-product applications.' },
+          { code:'EN-08', name:'Solar & Energy Products', description:'Solar-energy related products and associated commercial supply enquiries.' },
+          { code:'EL-09', name:'Electronic Products', description:'Electronic products sourced according to transaction-specific requirements.' },
+          { code:'PC-10', name:'Biogas & Petrochemicals', description:'Commercial activity related to biogas and petrochemical products.' },
+          { code:'WT-11', name:'Water Treatment Products', description:'Water-treatment products and materials for industrial and commercial applications.' }
+        ],
+        manifest: [
+          ['001','PHARMA RAW MATERIALS','OPEN'],
+          ['002','INDUSTRIAL INPUTS','ACTIVE'],
+          ['003','SOLAR / ENERGY','ROUTED'],
+          ['004','PETROCHEMICALS','OPEN'],
+          ['005','WATER TREATMENT','ACTIVE']
+        ]
+      };
+
+      let lastFocusedElement = null;
+
+      // 2. HELPERS
+      function qs(selector, scope=document){ return scope.querySelector(selector); }
+      function qsa(selector, scope=document){ return Array.from(scope.querySelectorAll(selector)); }
+      function getFocusableElements(scope){
+        return qsa('a[href],button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])', scope)
+          .filter(function(el){ return !el.hasAttribute('hidden'); });
+      }
+
+      // 3. NAV
+      function closeNav(){
+        const links = qs('#navLinks');
+        const toggle = qs('#navToggle');
+        links.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded','false');
+      }
+      function toggleNav(){
+        const links = qs('#navLinks');
+        const toggle = qs('#navToggle');
+        const isOpen = links.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+      }
+      function initNav(){
+        qs('#navToggle').addEventListener('click', toggleNav);
+        qsa('.nav__link').forEach(function(link){ link.addEventListener('click', closeNav); });
+      }
+
+      // 4. REVEAL
+      function initReveal(){
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          qsa('.reveal').forEach(function(el){ el.classList.add('is-visible'); });
+          return;
+        }
+        const observer = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold:.12 });
+        qsa('.reveal').forEach(function(el){ observer.observe(el); });
+      }
+
+      // 5. MANIFEST
+      function renderManifest(){
+        qs('#manifestRows').innerHTML = DATA.manifest.map(function(row){
+          return '<div class="manifest__row"><span class="manifest__code">'+row[0]+'</span><span>'+row[1]+'</span><span class="manifest__status">'+row[2]+'</span></div>';
+        }).join('');
+      }
+      function animateManifest(){
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const rows = qsa('.manifest__row');
+        let index = 0;
+        window.setInterval(function(){
+          rows.forEach(function(row){ row.style.background='transparent'; });
+          rows[index].style.background='rgba(62,140,124,.08)';
+          index = (index + 1) % rows.length;
+        }, 1600);
+      }
+
+      // 6. PORTFOLIO
+      function renderCommodityGrid(){
+        qs('#commodityGrid').innerHTML = DATA.commodities.map(function(item, index){
+          return '<button class="card" type="button" data-commodity-index="'+index+'">'+
+            '<span class="card__code">'+item.code+'</span>'+ 
+            '<h3 class="card__name">'+item.name+'</h3>'+ 
+            '<span class="card__arrow" aria-hidden="true">↗</span>'+ 
+          '</button>';
+        }).join('');
+      }
+      function openCommodity(index){
+        const item = DATA.commodities[index];
+        qs('#commodityModalCode').textContent = 'PORTFOLIO / ' + item.code;
+        qs('#commodityModalTitle').textContent = item.name;
+        qs('#commodityModalDescription').textContent = item.description;
+        openModal('commodityModal');
+      }
+      function initCommodityGrid(){
+        qs('#commodityGrid').addEventListener('click', function(event){
+          const card = event.target.closest('[data-commodity-index]');
+          if (!card) return;
+          openCommodity(Number(card.dataset.commodityIndex));
+        });
+      }
+
+      // 7. FORMS
+      function showToast(){
+        const toast = qs('#toast');
+        toast.classList.add('is-visible');
+        window.setTimeout(function(){ toast.classList.remove('is-visible'); }, 3200);
+      }
+      function handleDemoSubmit(event){
+        event.preventDefault();
+        showToast();
+        event.currentTarget.reset();
+        const modal = event.currentTarget.closest('.modal');
+        if (modal) closeModal(modal);
+      }
+      function initContactForm(){
+        qs('#contactForm').addEventListener('submit', handleDemoSubmit);
+        qs('#quoteForm').addEventListener('submit', handleDemoSubmit);
+      }
+
+      // 8. MODAL SYSTEM
+      function openModal(id){
+        const modal = document.getElementById(id);
+        if (!modal) return;
+        lastFocusedElement = document.activeElement;
+        modal.setAttribute('aria-hidden','false');
+        document.body.classList.add('modal-open');
+        const focusable = getFocusableElements(modal);
+        if (focusable.length) focusable[0].focus();
+      }
+      function closeModal(modal){
+        if (!modal) return;
+        modal.setAttribute('aria-hidden','true');
+        document.body.classList.remove('modal-open');
+        if (lastFocusedElement) lastFocusedElement.focus();
+      }
+      function trapModalFocus(event){
+        const modal = event.currentTarget;
+        if (event.key === 'Escape') {
+          closeModal(modal);
+          return;
+        }
+        if (event.key !== 'Tab') return;
+        const focusable = getFocusableElements(modal);
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+      function initModals(){
+        qsa('[data-open-modal]').forEach(function(trigger){
+          trigger.addEventListener('click', function(){ openModal(trigger.dataset.openModal); });
+        });
+        qsa('.modal').forEach(function(modal){
+          modal.addEventListener('click', function(event){
+            if (event.target === modal || event.target.closest('[data-close-modal]')) closeModal(modal);
+          });
+          modal.addEventListener('keydown', trapModalFocus);
+        });
+      }
+
+      // 9. MISC
+      function initMisc(){ qs('#year').textContent = new Date().getFullYear(); }
+
+      // 10. INIT
+      function init(){
+        renderManifest();
+        renderCommodityGrid();
+        initNav();
+        initReveal();
+        initCommodityGrid();
+        initContactForm();
+        initModals();
+        initMisc();
+        animateManifest();
+      }
+
+      document.addEventListener('DOMContentLoaded', init);
+    })();
+  </script>
+</body>
+</html>
